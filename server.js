@@ -5,6 +5,8 @@ const app = express();
 
 const sqlite3 = require('sqlite3').verbose();
 
+const inputCheck = require('./utils/inputCheck');
+
 // Express middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -92,7 +94,7 @@ app.delete('/api/candidate/:id', (req, res) => {
     });
 });
 
-// Create a candidate
+// Create a candidate (old way)
 // const sql = `INSERT INTO candidates (id, first_name, last_name, industry_connected) 
 //               VALUES (?,?,?,?)`;
 // const params = [1, 'Ronald', 'Firbank', 1];
@@ -104,6 +106,40 @@ app.delete('/api/candidate/:id', (req, res) => {
 //     console.log(result, this.lastID);
 // });
 
+// Create a candidate
+app.post('/api/candidate', ({ body }, res) => {
+    const errors = inputCheck(body, 'first_name', 'last_name', 'industry_connected');
+    if (errors) {
+        res.status(400).json({ error: errors });
+        return;
+    };
+
+    const sql = `INSERT INTO candidates (first_name, last_name, industry_connected) 
+    VALUES (?,?,?)`;
+    const params = [body.first_name, body.last_name, body.industry_connected];
+    
+    // ES5 function, not arrow function, to use `this`
+    db.run(sql, params, function (err, result) {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+
+        res.json({
+            message: 'success',
+            data: body,
+            id: this.lastID
+        });
+    });
+});
+
+
+
+
+
+
+
+// Basic test to see if things are working
 // app.get('/', (req, res) => {
 //     res.json({
 //         message: 'Hello World'
