@@ -2,7 +2,14 @@
   "name": "u-develop-it",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "sqlite3": "^5.0.0"
+  },
+  "devDependencies": {
+    "jest": "^26.4.1"
+  },
   "scripts": {
     "test": "jest",
     "migrate": "sqlite3 db/election.db < db/schema.sql",
@@ -20,12 +27,5 @@
   "bugs": {
     "url": "https://github.com/taylornyquist/u-develop-it/issues"
   },
-  "homepage": "https://github.com/taylornyquist/u-develop-it#readme",
-  "dependencies": {
-    "express": "^4.17.1",
-    "sqlite3": "^5.0.0"
-  },
-  "devDependencies": {
-    "jest": "^26.4.0"
-  }
+  "homepage": "https://github.com/taylornyquist/u-develop-it#readme"
 }

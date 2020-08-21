@@ -28,7 +28,13 @@ const db = new sqlite3.Database('./db/election.db', err => {
 
 // Get all candidates (new way)
 app.get('/api/candidates', (req, res) => {
-    const sql = `SELECT * FROM candidates`;
+    // const sql = `SELECT * FROM candidates`;
+    const sql = `SELECT candidates.*, parties.name 
+                AS party_name 
+                FROM candidates 
+                LEFT JOIN parties 
+                ON candidates.party_id = parties.id`;
+
     const params = [];
     db.all(sql, params, (err, rows) => {
         if (err) {
@@ -53,8 +59,15 @@ app.get('/api/candidates', (req, res) => {
 
 // Get single candidate (new way)
 app.get('/api/candidate/:id', (req, res) => {
-    const sql = `SELECT * FROM candidates 
-                 WHERE id = ?`;
+    // const sql = `SELECT * FROM candidates 
+    //              WHERE id = ?`;
+    const sql = `SELECT candidates.*, parties.name 
+                AS party_name 
+                FROM candidates 
+                LEFT JOIN parties 
+                ON candidates.party_id = parties.id 
+                WHERE candidates.id = ?`;
+
     const params = [req.params.id];
     db.get(sql, params, (err, row) => {
         if (err) {
@@ -117,7 +130,7 @@ app.post('/api/candidate', ({ body }, res) => {
     const sql = `INSERT INTO candidates (first_name, last_name, industry_connected) 
     VALUES (?,?,?)`;
     const params = [body.first_name, body.last_name, body.industry_connected];
-    
+
     // ES5 function, not arrow function, to use `this`
     db.run(sql, params, function (err, result) {
         if (err) {
