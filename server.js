@@ -5,16 +5,16 @@ const app = express();
 
 const apiRoutes = require('./routes/apiRoutes');
 
+// Express middleware (middleware needs to be before the "Use apiRoutes" below this for some reason...)
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
 // Use apiRoutes
 app.use('/api', apiRoutes);
 
 // const sqlite3 = require('sqlite3').verbose();
 
 const inputCheck = require('./utils/inputCheck');
-
-// Express middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 
 const db = require('./db/database');
 // // Connect to database (moved to /db/database.js file)

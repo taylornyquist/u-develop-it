@@ -110,5 +110,3 @@ router.delete('/voter/:id', (req, res) => {
 });
 
 module.exports = router;
-
-// POST AND PUT ROUTES NOT WORKING!!!
